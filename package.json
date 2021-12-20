@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/china78/tgg-table-scroll.git"
+    "url": "git+https://github.com/china78/tgg-large-screen.git"
   },
   "author": "tiangg",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/china78/tgg-table-scroll/issues"
+    "url": "https://github.com/china78/tgg-large-screen/issues"
   },
-  "homepage": "https://github.com/china78/tgg-table-scroll#readme",
+  "homepage": "https://github.com/china78/tgg-large-screen#readme",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.16.0",

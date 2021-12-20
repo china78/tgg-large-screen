@@ -1,206 +1,445 @@
-# 1. 组件导入
+## Introduction
 
-```
-import { ScaleViewContainer, ScaleViewItem } from '@/components/common/ScaleView';
-```
+基于 React 封装，主要用于构建大屏（全屏）数据展示页面即数据可视化<br>
+利用响应式的适配方式，不管是在 PC 端，还是投放到大屏上，不管是 1440\*768，1080p，还是 2k，4k 甚至更大分辨率的屏幕，都只需要 1 次适配，多屏幕兼容。<br>
+以 UI 设计图为基准，适配好一个尺寸，理论上可以支持任意相似屏幕比例的屏幕<br>
 
-<br>
+###
 
-# 2. 参数说明
+![name](./public/resource/demo1.gif)<br>
 
-## 2.1 ScaleViewContainer
+### 响应式布局
 
-### config 容器设置(必选)
+![name](./public/resource/demo2.gif)<br>
+在 1920px\*1080px 的画布上，即使缩小到 1440\*768，或者放大到 3840\*2160，所有内容将自动缩放成相应比例值，也无需重新适配<br>
 
-```
-config = {
-  width: Integer, // (必选)容器宽度；如 1920，
-  height: Integer, // (必选)容器高度；如 1080，
-  scaleType: String, // (必选)缩放方式：FULL_SCREEN(适应全屏)|ADAPT_WIDTH(宽度铺满，高度按比例缩放)|ADAPT_HEIGHT(高度铺满，宽度按比例缩放)
-}
-```
+## Use
 
-### style 容器样式
+### 1. 创建容器
 
-```
-style = {
-  background: xxx,
-  ...
-}
-```
+根据 UI 的设计图，创建相应的画布大小，画布大小一般为 1920px\*1080px<br>
+在父组件中引入 ScaleViewContainer，将对容器内的所有子组件进行缩放处理<br>
 
-### className 容器 class
+**例 1**<br>
 
-```
-className = {styles.container}
-```
+```javascript
 
-### contentStyle 容器内容区域样式
-
-```
-contentStyle = {
-  background: xxx,
-  ...
-}
+const Component = () => {
+  return (
+    <ScaleViewContainer
+      config={{
+        width: 1920, // (必选)容器宽度；如 1920，
+        height: 1080, // (必选)容器高度；如 1080，
+        scaleType: 'FULL_SCREEN',
+      }}
+    ></ScaleViewContainer>
+  );
+};
 ```
 
-### contentClass 容器内容区域 class
+**例 2**<br>
+<code>ScaleViewContainer</code> 与 <code>ScaleViewItem</code> 不一定是父子关系，也可以是爷孙关系。<br>
+因此可以将 ScaleViewContainer 提取到最外层中，对全局组件进行适配<br>
 
-```
-contentClass = {styles.content}
-```
-
-## 2.2 ScaleViewItem
-
-### style 基础样式(必选)
-
-```
-style = {
-  top: Integer, // (必选)离容器顶部距离，单位像素；如 200,
-  left: Integer, // (必选)离容器左边部距离，单位像素；如 200,
-  width: Integer|String, // (必选)Item 宽度，单位像素；如 200|200px|100%，
-  height: Integer|String, // (必选)Item 高度，单位像素；如 200|200px|100%，
-}
+```javascript
+// 1. 新建配置文件, 如./config.js
+export default {
+  container: {
+    width: 1920, // (必选)容器宽度；如 1920，
+    height: 1080, // (必选)容器高度；如 1080，
+    scaleType: 'FULL_SCREEN',
+  },
+};
 ```
 
-### transition 进场过渡动画(非必选)
+```javascript
+// 2. 实例化容器组件, 如./DemoDataV.js
+import Config from './config';
 
-```
-transition = {
-  anim: String, // (必选)item 进场方式；slide(滑动)|opacity(渐变)
-  from: String, // (非必选)item 进场起始位置，仅当 anim=slide 时有效；left(默认，从左边进场)|top(从顶部进场)|right(从右边进场)|bottom(从底部进场)
-  timeout: Number, // (非必选)动画执行时间,默认250
-  delay: Number, // (非必选)延迟执行,默认0
-}
-```
+const DemoDataV = props => {
+  return (
+    <ScaleViewContainer
+      config={Config.container}
+      className={styles.scaleViewContainer}
+    >
+      <Switch>
+        <Route
+          path="/demo"
+          exact
+          render={() => <Redirect to="/demo/data-v1" />}
+        />
+        <Route path="/demo/data-v1" component={LoadableDataV1} />
+        <Route path="/demo/data-v2" component={LoadableDataV2} />
+        <Route path="/demo/data-v3" component={LoadableDataV3} />
+      </Switch>
+    </ScaleViewContainer>
+  );
+};
 
-### mode 缩放模式(非必选，默认 standard)
-
-#### mode = "standard"
-
-```
-mode = "standard" // 跟随容器缩放，不改变 item 的 width、height、scale（默认）
-```
-
-#### mode = "fixed"
-
-```
-mode = "fixed" // 跟随容器缩放，自动改变 item 的 width、height、scale。内容不会变形，但会被裁剪；使 item 大小不依赖 scale，而是通过改变宽高来适配；建议仅在地图上使用；
-```
-
-#### mode = "scaleXFix"
-
-```
-mode = "scaleXFix" // 跟随容器缩放，不改变 item 的 width、height，不改变 scaleY，自动改变 scaleX。内容不会变形。保持 scaleY，通过调整 scaleX 来保持内容不变形。
+export default DemoDataV;
 ```
 
-#### mode = "scaleYFix"
+### 2. 创建子组件
 
+**例 1**<br>
+
+const Parent = () => {
+  return (
+    <ScaleViewContainer
+      config={{
+        width: 1920, // (必选)容器宽度；如 1920，
+        height: 1080, // (必选)容器高度；如 1080，
+        scaleType: 'FULL_SCREEN',
+      }}
+    >
+      <Children></Children>
+    </ScaleViewContainer>
+  );
+};
+
+const Children = () => {
+  return (
+    <ScaleViewItem
+      config={{
+        id: 'headerChart',
+        style: { left: 0, top: 0, width: '100%', height: 200 },
+        transition: {
+          anim: 'slide',
+          from: 'top',
+          timeout: 300,
+          delay: 100,
+        },
+        contentStyle: { background: 'rgba(0,0,0,0.5)' },
+      }}
+    ></ScaleViewItem>
+  );
+};
 ```
-mode = "scaleYFix" // 跟随容器缩放，不改变 item 的 width、height，不改变 scaleX，自动改变 scaleY。内容不会变形。保持 scaleX，通过调整 scaleY 来保持内容不变形。
-```
 
-#### mode = "adaptWidth"
+**例 2**
 
-```
-mode = "adaptWidth" // 跟隨容器縮放，宽度相对固定，高度自动缩放。当 container.scaleX / container.scaleY > 1 时，自动改变 width、scaleX；当 container.scaleX / container.scaleY < 1 时，自动改变 scaleY，内容不会变形；
-```
-
-#### mode = "adaptHeight"
-
-```
-mode = "scaleYFix" // 跟随容器缩放，高度相对固定，宽度自动缩放。当 container.scaleX / container.scaleY > 1 时，自动改变 scaleX；当 container.scaleX / container.scaleY < 1 时，自动改变 height, scaleY，内容不会变形；
-```
-
-### relations 相对布局关系(非必选)
-
-```
-relations={{
-  layoutAbove: 'chartId', // 当前item位于chartId上方（覆盖style.bottom的值）
-  layoutBelow: 'chartId', // 当前item位于chartId下方（覆盖style.top的值）
-  toLeftOf: 'chartId', // 当前item位于chartId左方（覆盖style.right的值）
-  toRightOf: 'chartId', // 当前item位于chartId右方（覆盖style.left的值）
-  alignLeft: 'chartId', // 当前item左边界与chartId左边界对齐（覆盖style.left的值）
-  alignRight: 'chartId', // 当前item右边界与chartId右边界对齐（覆盖style.right的值）
-  alignTop: 'chartId', // 当前item上边界与chartId上边界对齐（覆盖style.top的值）
-  alignBottom: 'chartId', // 当前item下边界与chartId下边界对齐（覆盖style.bottom的值）
-}}
-```
-
-<br>
-
-## 3. 完整例子
-
-```
-<ScaleViewContainer config={{
-  width: 1920,
-  height: 1080,
-  scaleType: 'FULL_SCREEN'
-}}>
-  <ScaleViewItem
-    id="chart1"
-    style={{
-      left: 200,
-      top: 200,
-      width: 300,
-      height: 300,
-    }}
-    mode = 'scaleXFix'
-    transition = {{
-      anim: 'slide',
-      from: 'left',
-      timeout: 300,
-      delay: 250,
-    }}
-    contentStyle = {{
-      background: 'rgba(0, 0, 0, 0.5)'
-    }}
-  >
-  </ScaleViewItem>
-  <ScaleViewItem config={{
-    id: chart2,
+```javascript
+// 1. 为了代码简介，可以吧配置信息统一放在配置文件中
+// ./config.js
+export default {
+  topChart: {
+    id: 'topChart',
     style: {
-      left: 200, // 将被toRightOf覆盖
-      top: 200, // 将被layoutBelow覆盖
-      width: 300,
-      height: 300,
-    }
-    mode: 'scaleXFix'
+      left: 0,
+      top: 0,
+      right: 0,
+      width: '100%',
+      height: 200,
+    },
+    transition: {
+      anim: 'slide',
+      from: 'top',
+      timeout: 300,
+      delay: 300,
+    },
+    mode: 'adaptWidth',
+  },
+  leftChart: {
+    id: 'leftChart',
+    style: {
+      left: 0,
+      bottom: 0,
+      width: 400,
+    },
     transition: {
       anim: 'slide',
       from: 'left',
       timeout: 300,
-      delay: 250,
-    }
+      delay: 300,
+    },
+    mode: 'scaleXFix',
     relations: {
-      layoutBelow: 'chart1', // 位于chart1正下方
-      toRightOf: 'chart1', // 位于chart1 正右方
-    }
-  }}>
-    <MyComponent/>
-  </ScaleViewItem>
-  <ScaleViewItem config={{
-    id: chart3,
+      layoutBelow: 'topChart',
+    },
+  },
+  rightChart: {
+    id: 'rightChart',
     style: {
-      left: 200, // toRightOf覆盖style.left
-      top: 200, // alignTop覆盖style.top
-      width: 300,
-      height: 300, // alignBottom会覆盖style.bottom，所以height不生效
-    }
-    mode: 'scaleYFix'
+      right: 0,
+      bottom: 0,
+      width: 460,
+    },
     transition: {
       anim: 'slide',
-      from: 'left',
+      from: 'right',
       timeout: 300,
-      delay: 250,
-    }
+      delay: 300,
+    },
+    mode: 'scaleXFix',
     relations: {
-      alignTop: 'chart2', // 与chart2上边界对齐
-      alignBottom: 'chart2', // 与chart2 下边界对齐
-      toRightOf: 'chart2', // 位于chart2右边
-    }
-  }}>
-    <MyComponent/>
-  </ScaleViewItem>
-</ScaleViewContainer>
+      layoutBelow: 'topChart',
+    },
+  },
+  mapChart: {
+    style: {
+      left: 0,
+      top: 0,
+      width: '100%',
+      height: '100%',
+    },
+    mode: 'fixed',
+  },
+};
+```
+
+```javascript
+// 2. 实例化组件，在页面中引入ScaleViewItem
+import React, { useEffect } from 'react';
+import { Map } from '@/components';
+import Config from './config';
+import styles from './DataV1.module.less';
+
+const DataV1 = props => {
+  return (
+    <>
+      <ScaleViewItem config={Config.mapChart}>
+        <Map></Map>
+      </ScaleViewItem>
+      <ScaleViewItem config={Config.leftChart} contentClass={styles.leftChart}>
+        LeftChart
+      </ScaleViewItem>
+      <ScaleViewItem config={Config.topChart} contentClass={styles.topChart}>
+        Top Chart
+      </ScaleViewItem>
+      <ScaleViewItem
+        config={Config.rightChart}
+        contentClass={styles.rightChart}
+      >
+        Right Chart
+      </ScaleViewItem>
+    </>
+  );
+};
+
+export default DataV1;
+```
+
+
+### 1. ScaleViewContainer
+
+使用 ScaleViewContainer 作为大屏的容器组件，可以根据当前浏览器的像素宽高，将容器内的组件统一按照某个计算比值进行缩放。用户只需要按照设计稿还原 UI，使用该组件，可以在任何分辨率的浏览器中按比例尽可能还原。
+| 参数 | 说明 | 类型 | 默认值 | 必选 |
+| ------------ | ---------------------------------------- | ------ | ------ | ---- |
+| config | 设置容器画布（内容区域）的尺寸及缩放模式 | object | 无 | 是 |
+| style | 容器的样式 | object | 无 | 否 |
+| className | 容器的 class | class | 无 | 否 |
+| contentStyle | 容器画布（内容区域）的样式 | object | 无 | 否 |
+| contentClass | 容器画布（内容区域）的 class | class | 无 | 否 |
+
+#### 1.1 config
+
+| 参数      | 说明                                                                                                                                                 | 类型   | 默认值 |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------ |
+| width     | 容器宽度                                                                                                                                             | Number |        |
+| height    | 容器高度                                                                                                                                             | Number |        |
+| scaleType | 容器缩放模式：<code>FULL_SCREEN</code>适应全屏，<code>ADAPT_HEIGHT</code>宽度铺满，高度按比例缩放， <code>ADAPT_WIDTH</code>高度铺满，宽度按比例缩放 | String |        |
+
+#### 2. ScaleViewItem
+
+| 参数         | 说明                                                                                                                                                         | 类型   | 默认值   | 必选 |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | -------- | ---- |
+| style        | Item 容器的样式                                                                                                                                              | object | 无       | 否   |
+| mode         | Item 容器的缩放模式：<code>standard</code>,<code>fixed</code>,<code>scaleXFix</code>,<code>scaleYFix</code>,<code>adaptWidth</code>,<code>adaptHeight</code> | string | standard | 否   |
+| transition   | 进场动画                                                                                                                                                     | object | 无       | 否   |
+| relations    | Item 间相对关系                                                                                                                                              | object | 无       | 否   |
+| className    | Item 容器的 class                                                                                                                                            | class  | 无       | 否   |
+| contentStyle | Item 内容区域的样式                                                                                                                                          | object | 无       | 否   |
+| contentClass | Item 内容区域的 class                                                                                                                                        | class  | 无       | 否   |
+| config       | Item 统一设置（主要目的是减少组件参数数量）：<code>style</code><code>mode</code><code>transition</code><code>relations</code><code>contentStyle</code>       | object | 无       | 否   |
+
+#### 2.1 mode 缩放模式
+
+| 参数               | 说明                                                                                                                                                                                             | 类型   | 默认值 | 必选 |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ------ | ---- |
+| mode='standard'    | 跟随容器缩放，不改变 item 的 width、height、scale（默认）                                                                                                                                        | string | 无     | 否   |
+| mode='fixed'       | 跟随容器缩放，自动改变 item 的 width、height、scale。内容不会变形，但会被裁剪；使 item 大小不依赖 scale，而是通过改变宽高来适配；`建议仅在地图上使`用；                                          | string | 无     | 否   |
+| mode='scaleXFix'   | 跟随容器缩放，不改变 item 的 width、height，不改变 scaleY，自动改变 scaleX。内容不会变形。保持 scaleY，通过调整 scaleX 来保持内容不变形。                                                        | string | 无     | 否   |
+| mode='scaleYFix'   | 跟随容器缩放，不改变 item 的 width、height，不改变 scaleX，自动改变 scaleY。内容不会变形。保持 scaleX，通过调整 scaleY 来保持内容不变形。                                                        | string | 无     | 否   |
+| mode='adaptWidth'  | 跟隨容器縮放，宽度相对固定，高度自动缩放。 当 container.scaleX / container.scaleY > 1 时，自动改变 width,scaleX；当 container.scaleX / container.scaleY < 1 时，自动改变 scaleY，内容不会变形；  | string | 无     | 否   |
+| mode='adaptHeight' | 跟随容器缩放，高度相对固定，宽度自动缩放。当 container.scaleX / container.scaleY > 1 时，自动改变 scaleX；当 container.scaleX / container.scaleY < 1 时，自动改变 height, scaleY，内容不会变形； | string | 无     | 否   |
+
+**注意：由于大多数地图 api 都对地图上的鼠标事件进行了监听处理，对组件进行 transform 变化时会出现偏移，使用 mode='fixed'可以解决这一问题**
+
+#### 2.2 transition 进场动画
+
+| 参数    | 说明                                                                                                      | 类型   | 默认值 | 必选 |
+| ------- | --------------------------------------------------------------------------------------------------------- | ------ | ------ | ---- |
+| anim    | 进场动画方式：<code>slide</code><code>opacity</code>                                                      | string | 无     | 是   |
+| from    | 进场方向，仅当 anim='slide'时生效：<code>left</code><code>top</code><code>right</code><code>bottom</code> | string | 无     | 否   |
+| timeout | 执行时间                                                                                                  | number | 无     | 是   |
+| delay   | 延迟时间                                                                                                  | number | 无     | 否   |
+
+```javascript
+// 例如
+const transition = {
+  anim: 'slide',
+  from: 'left',
+  timeout: 150,
+  delay: 150,
+};
+```
+
+#### 2.3 relations Item 间相对关系
+
+| 参数            | 说明                         | 类型   | 默认值 | 必选 |
+| --------------- | ---------------------------- | ------ | ------ | ---- |
+| layoutBelow: id | 位于 id 元素正下方           | string | 无     | 否   |
+| layoutAbove: id | 位于 id 元素正上方           | string | 无     | 否   |
+| toLeftOf: id    | 位于 id 元素左边             | string | 无     | 否   |
+| toRightOf: id   | 位于 id 元素右边             | string | 无     | 否   |
+| alignLeft: id   | 左边界与 id 元素的左边界对齐 | string | 无     | 否   |
+| alignRight: id  | 右边界 id 元素的右边界对齐   | string | 无     | 否   |
+| alignTop: id    | 上边界与 id 上边界对齐       | string | 无     | 否   |
+| alignBottom: id | 下边界与 id 下边界对齐       | string | 无     | 否   |
+
+```javascript
+// 例如
+const relations = {
+  layoutBelow: 'chart1',
+  layoutAbove: 'chart2',
+};
+```
+
+### 3. ScaleViewContext
+
+当组件不在 ScaleViewContainer 的子组件中，而在孙子组件中，由于使用 ScaleViewItem 层级嵌套太多容易出现样式错乱问题，这时可以使用 ScaleViewContext 来获取 ScaleViewContainer 的容器参数，来对组件做适配。
+**注意：ScaleViewContext 与 ScaleViewContainer 必须在同一上下文**
+
+```javascript
+import React from 'react';
+
+const ContextDemo = props => {
+  return (
+    <ScaleViewContext.Consumer>
+      {({ size }) => {
+        return (
+          <div style={{ fontSize: 40 }}>
+            <div>size.scaleX: {size.scaleX}</div>
+            <div>size.scaleY: {size.scaleY}</div>
+            <div>size.width: {size.width}</div>
+            <div>size.height: {size.height}</div>
+          </div>
+        );
+      }}
+    </ScaleViewContext.Consumer>
+  );
+};
+
+export default ContextDemo;
+```
+
+### 4. useSize
+
+<code>useSize</code> 使用 hooks 方式获取容器参数
+
+```javascript
+import React from 'react';
+import { useSize } from 'react-scale-view';
+
+const Demo = props => {
+  const size = useSize();
+  return (
+    <div style={{ fontSize: 40 }}>
+      <div>size.scaleX: {size.scaleX}</div>
+      <div>size.scaleY: {size.scaleY}</div>
+      <div>size.width: {size.width}</div>
+      <div>size.height: {size.height}</div>
+    </div>
+  );
+};
+
+export default ContextDemo;
+```
+
+### 5. withSize
+
+<code>withSize</code> 使用 HOC 方式注入容器参数
+
+```javascript
+import React from 'react';
+
+const Demo = props => {
+  const { size } = props;
+  return (
+    <div style={{ fontSize: 40 }}>
+      <div>size.scaleX: {size.scaleX}</div>
+      <div>size.scaleY: {size.scaleY}</div>
+      <div>size.width: {size.width}</div>
+      <div>size.height: {size.height}</div>
+    </div>
+  );
+};
+
+export default withSize(ContextDemo);
+```
+
+#### 完整例子
+
+```javascript
+import React, { Component } from 'react';
+import './App.css';
+class App extends Component {
+  render() {
+    return (
+      <ScaleViewContainer
+        config={{
+          width: 1920, // (必选)容器宽度；如 1920，
+          height: 1080, // (必选)容器高度；如 1080，
+          scaleType: 'FULL_SCREEN',
+        }}
+      >
+        <ScaleViewItem
+          config={{
+            id: 'headerChart',
+            style: { left: 0, top: 0, width: '100%', height: 200 },
+            transition: {
+              anim: 'slide',
+              from: 'top',
+              timeout: 300,
+              delay: 100,
+            },
+            contentStyle: { background: 'rgba(0,0,0,0.5)' },
+          }}
+        ></ScaleViewItem>
+        <ScaleViewItem
+          config={{
+            style: { left: 0, top: 0, bottom: 0, width: 450 },
+            transition: {
+              anim: 'slide',
+              from: 'left',
+              timeout: 300,
+              delay: 100,
+            },
+            contentStyle: { background: 'rgba(0,0,0,0.5)' },
+            relations: {
+              layoutBelow: 'headerChart',
+            },
+          }}
+        ></ScaleViewItem>
+        <ScaleViewItem
+          config={{
+            style: { right: 0, top: 0, bottom: 0, width: 450 },
+            transition: {
+              anim: 'slide',
+              from: 'right',
+              timeout: 300,
+              delay: 100,
+            },
+            contentStyle: { background: 'rgba(0,0,0,0.5)' },
+            relations: {
+              layoutBelow: 'headerChart',
+            },
+          }}
+        ></ScaleViewItem>
+      </ScaleViewContainer>
+    );
+  }
+}
+
+export default App;
 ```
