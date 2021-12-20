@@ -6,17 +6,17 @@ git clone https://github.com/china78/tgg-large-screen-demo.git
 ```
 ## Introduction
 
-TggLargeScreen 组件库基于 React 封装，主要用于构建大屏（全屏）数据展示页面即数据可视化<br>
+tgg-large-screen 组件库基于 React 封装，主要用于构建大屏（全屏）数据展示页面即数据可视化<br>
 利用响应式的适配方式，不管是在 PC 端，还是投放到大屏上，不管是 1440\*768，1080p，还是 2k，4k 甚至更大分辨率的屏幕，都只需要 1 次适配，多屏幕兼容。<br>
 以 UI 设计图为基准，适配好一个尺寸，理论上可以支持任意相似屏幕比例的屏幕<br>
 
 ###
 
-![name](./public/resource/demo1.gif)<br>
+![name](https://raw.githubusercontent.com/china78/tgg-large-screen/main/public/resource/demo1.gif)<br>
 
 ### 响应式布局
 
-![name](./public/resource/demo2.gif)<br>
+![name](https://raw.githubusercontent.com/china78/tgg-large-screen/main/public/resource/demo2.gif)<br>
 在 1920px\*1080px 的画布上，即使缩小到 1440\*768，或者放大到 3840\*2160，所有内容将自动缩放成相应比例值，也无需重新适配<br>
 
 ## Install
@@ -468,7 +468,7 @@ export default App;
 ```
 
 **运行效果**<br>
-![name](./public/resource/demo3.gif)<br>
+![name](https://raw.githubusercontent.com/china78/tgg-large-screen/main/public/resource/demo3.gif)<br>
 
 **注意：在开发中使用一些第三方的 UI 库或 API 时，往往会脱离上下文（Context），或在 ScaleViewContainer 外渲染组件**<br>
 **如：**<br>
