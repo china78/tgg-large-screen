@@ -1,5 +1,9 @@
-# TggLargeScreen
-
+## Demo项目
+```javascript
+git clone https://github.com/china78/tgg-large-screen-demo.git
+1. yarn install
+2. yarn start
+```
 ## Introduction
 
 TggLargeScreen 组件库基于 React 封装，主要用于构建大屏（全屏）数据展示页面即数据可视化<br>
