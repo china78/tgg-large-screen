@@ -1,0 +1,62 @@
+{
+  "name": "tgg-large-screen",
+  "version": "1.0.0",
+  "description": "大屏适配等比无压缩自适应框架-react",
+  "main": "lib/index.js",
+  "scripts": {
+    "start": "webpack-dev-server --mode development",
+    "build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/china78/tgg-table-scroll.git"
+  },
+  "author": "tiangg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/china78/tgg-table-scroll/issues"
+  },
+  "homepage": "https://github.com/china78/tgg-table-scroll#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@babel/preset-react": "^7.16.0",
+    "@babel/preset-typescript": "^7.16.0",
+    "@types/react": "^17.0.33",
+    "@types/react-dom": "^17.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
+    "autoprefixer": "^10.4.0",
+    "babel-loader": "^8.2.3",
+    "chalk": "^4.1.2",
+    "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "^6.5.0",
+    "cssnano": "^5.0.8",
+    "execa": "^5.1.1",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "gh-pages": "^3.2.3",
+    "html-webpack-plugin": "^5.5.0",
+    "inquirer": "^8.2.0",
+    "less": "^4.1.2",
+    "less-loader": "^10.2.0",
+    "mini-css-extract-plugin": "^2.4.5",
+    "portfinder": "^1.0.28",
+    "postcss": "^8.3.11",
+    "postcss-loader": "^6.2.0",
+    "prettier": "2.4.1",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "resolve-url-loader": "^4.0.0",
+    "sass": "^1.43.4",
+    "sass-loader": "^12.3.0",
+    "style-loader": "2.0.0",
+    "tgg-table-scroll": "^1.0.2",
+    "typescript": "^4.4.4",
+    "webpack": "^5.61.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0",
+    "webpack-merge": "^5.8.0"
+  }
+}
