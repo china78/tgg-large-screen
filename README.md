@@ -1,6 +1,8 @@
+# TggLargeScreen
+
 ## Introduction
 
-基于 React 封装，主要用于构建大屏（全屏）数据展示页面即数据可视化<br>
+TggLargeScreen 组件库基于 React 封装，主要用于构建大屏（全屏）数据展示页面即数据可视化<br>
 利用响应式的适配方式，不管是在 PC 端，还是投放到大屏上，不管是 1440\*768，1080p，还是 2k，4k 甚至更大分辨率的屏幕，都只需要 1 次适配，多屏幕兼容。<br>
 以 UI 设计图为基准，适配好一个尺寸，理论上可以支持任意相似屏幕比例的屏幕<br>
 
@@ -13,6 +15,13 @@
 ![name](./public/resource/demo2.gif)<br>
 在 1920px\*1080px 的画布上，即使缩小到 1440\*768，或者放大到 3840\*2160，所有内容将自动缩放成相应比例值，也无需重新适配<br>
 
+## Install
+
+npm: <code>npm i tgg-large-screen</code><br>
+或<br>
+yarn: <code>yarn add tgg-large-screen</code><br>
+
+
 ## Use
 
 ### 1. 创建容器
@@ -23,6 +32,7 @@
 **例 1**<br>
 
 ```javascript
+import { ScaleViewContainer } from 'tgg-large-screen';
 
 const Component = () => {
   return (
@@ -54,6 +64,7 @@ export default {
 
 ```javascript
 // 2. 实例化容器组件, 如./DemoDataV.js
+import { ScaleViewContainer } from 'tgg-large-screen';
 import Config from './config';
 
 const DemoDataV = props => {
@@ -82,6 +93,9 @@ export default DemoDataV;
 ### 2. 创建子组件
 
 **例 1**<br>
+
+```javascript
+import { ScaleViewContainer, ScaleViewItem } from 'tgg-large-screen';
 
 const Parent = () => {
   return (
@@ -190,6 +204,7 @@ export default {
 ```javascript
 // 2. 实例化组件，在页面中引入ScaleViewItem
 import React, { useEffect } from 'react';
+import { ScaleViewItem } from 'tgg-large-screen';
 import { Map } from '@/components';
 import Config from './config';
 import styles from './DataV1.module.less';
@@ -219,6 +234,7 @@ const DataV1 = props => {
 export default DataV1;
 ```
 
+## Document
 
 ### 1. ScaleViewContainer
 
@@ -312,6 +328,7 @@ const relations = {
 
 ```javascript
 import React from 'react';
+import { ScaleViewContext } from 'tgg-large-screen';
 
 const ContextDemo = props => {
   return (
@@ -339,7 +356,7 @@ export default ContextDemo;
 
 ```javascript
 import React from 'react';
-import { useSize } from 'react-scale-view';
+import { useSize } from 'tgg-large-screen';
 
 const Demo = props => {
   const size = useSize();
@@ -362,6 +379,7 @@ export default ContextDemo;
 
 ```javascript
 import React from 'react';
+import { withSize } from 'tgg-large-screen';
 
 const Demo = props => {
   const { size } = props;
@@ -382,6 +400,7 @@ export default withSize(ContextDemo);
 
 ```javascript
 import React, { Component } from 'react';
+import { ScaleViewContainer, ScaleViewItem } from 'tgg-large-screen';
 import './App.css';
 class App extends Component {
   render() {
@@ -443,3 +462,12 @@ class App extends Component {
 
 export default App;
 ```
+
+**运行效果**<br>
+![name](./public/resource/demo3.gif)<br>
+
+**注意：在开发中使用一些第三方的 UI 库或 API 时，往往会脱离上下文（Context），或在 ScaleViewContainer 外渲染组件**<br>
+**如：**<br>
+**1. ant-design 会选在 body 下渲染 modal，popcontainer 等**<br>
+**2. 如在地图上创建图标（Marker），海量图（MassMark），弹窗（InfoWindow）等**<br>
+**导致这些组件脱离了 ScaleViewContainer 适配范围。针对这些情况，可以使用<code>ScaleViewContext</code>，<code>useSize</code>，<code>withSize</code>获取 ScaleViewContainer 的缩放比例及容器大小，对第三方组件进行 transform 变化。**<br>
