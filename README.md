@@ -1,4 +1,4 @@
-## Demo项目
+## 项目应用
 ```javascript
 基本演示
 git clone https://github.com/china78/tgg-large-screen-demo.git
