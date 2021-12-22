@@ -1,6 +1,6 @@
 {
   "name": "tgg-large-screen",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "大屏适配等比无压缩自适应框架-react",
   "main": "lib/index.js",
   "scripts": {
