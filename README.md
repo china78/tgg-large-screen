@@ -1,4 +1,5 @@
-## 项目应用
+## Usag
+
 ```javascript
 基本演示
 git clone https://github.com/china78/tgg-large-screen-demo.git
@@ -9,6 +10,8 @@ git clone https://github.com/china78/large-screen-demo-lishui
 1. yarn install
 2. yarn start
 ```
+![name](https://raw.githubusercontent.com/china78/tgg-large-screen/main/public/resource/ls.png)<br>
+
 ## Introduction
 
 tgg-large-screen 组件库基于 React 封装，主要用于构建大屏（全屏）数据展示页面即数据可视化<br>
@@ -472,8 +475,8 @@ class App extends Component {
 export default App;
 ```
 
-**实战项目**<br>
-![name](https://raw.githubusercontent.com/china78/tgg-large-screen/main/public/resource/ls.png)<br>
+**运行效果**<br>
+![name](https://raw.githubusercontent.com/china78/tgg-large-screen/main/public/resource/demo3.gif)<br>
 
 **注意：在开发中使用一些第三方的 UI 库或 API 时，往往会脱离上下文（Context），或在 ScaleViewContainer 外渲染组件**<br>
 **如：**<br>
